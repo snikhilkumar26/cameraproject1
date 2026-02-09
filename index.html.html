@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Camera App</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        text-align: center;
+        padding: 20px;
+    }
+    video, canvas {
+        border: 2px solid #333;
+        border-radius: 10px;
+        width: 320px;
+        height: 240px;
+    }
+    button {
+        margin: 10px;
+        padding: 10px 15px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        border: none;
+        background: #007bff;
+        color: white;
+    }
+    button:hover {
+        background: #0056b3;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>📷 Camera App</h1>
+
+<video id="video" autoplay></video>
+<br>
+
+<button onclick="startCamera()">Start Camera</button>
+<button onclick="takePhoto()">Capture Photo</button>
+<button onclick="downloadPhoto()">Download</button>
+
+<br><br>
+
+<canvas id="canvas"></canvas>
+
+<script>
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const context = canvas.getContext("2d");
+
+    // Start camera
+    function startCamera() {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(error => {
+                alert("Camera access denied!");
+            });
+    }
+
+    // Capture photo
+    function takePhoto() {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    }
+
+    // Download photo
+    function downloadPhoto() {
+        const link = document.createElement("a");
+        link.download = "photo.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    }
+</script>
+
+</body>
+</html>
